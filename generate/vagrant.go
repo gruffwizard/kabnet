@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
 config.ssh.insert_key = true
 config.ssh.forward_agent = true
-config.ssh.private_key_path = "/Users/spoole/kabnet/secrets/core_rsa"
+config.ssh.private_key_path = "{{.Secrets}}/core_rsa"
 config.ssh.username = "core"
 
 
