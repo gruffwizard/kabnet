@@ -1,2 +1,2 @@
 go build
-cp kabnet /usr/local/bin
+mv  kabnet /usr/local/bin

@@ -1,4 +1,4 @@
-package generate
+package stage
 
 
 
@@ -18,12 +18,15 @@ import (
   to generate details configs.
 
 */
-func Generate(g *defs.GeneratorConfig) {
+func Generate(g *defs.GeneratorDefinition) {
 
   checkOptions(g)
 
-  util.SpeculativeExecute("VBoxManage","natnetwork","add","--netname","kabnetnet","--network","vboxnet1")
+  // delete installation directory ...
   
+
+  util.SpeculativeExecute("VBoxManage","natnetwork","add","--netname","kabnetnet","--network","vboxnet1")
+
 
   ip,netaddr,err := net.ParseCIDR(g.Cluster.AddressPool)
   if err != nil { log.Fatal(err) }
@@ -38,8 +41,8 @@ func Generate(g *defs.GeneratorConfig) {
   log.Print(g.Cluster.AddressRange)
   log.Print(g.Cluster.NetMask)
 
-  g.Secret=util.LoadFile(g.Secrets+"/pull-secret.txt")
-  g.Key=util.LoadFile(g.Secrets+"/core_rsa.pub")
+  g.Secret=util.LoadFile(g.SecretsDir+"/pull-secret.txt")
+  g.Key=util.LoadFile(g.SecretsDir+"/core_rsa.pub")
 
 
 
@@ -59,7 +62,7 @@ os.Chdir(g.Installer)
 }
 
 
-func checkOptions(g *defs.GeneratorConfig) {
+func checkOptions(g *defs.GeneratorDefinition) {
 
   info,_:=util.SpeculativeExecute("vagrant","plugin","list")
 

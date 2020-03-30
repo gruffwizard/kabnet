@@ -3,7 +3,7 @@ package cmd
 import (
 
   "github.com/spf13/cobra"
-  "github.com/gruffwizard/kabnet/generate"
+  "github.com/gruffwizard/kabnet/stage"
   "github.com/gruffwizard/kabnet/defs"
   "github.com/gruffwizard/kabnet/util"
   "path/filepath"
@@ -19,9 +19,9 @@ var PConfigDir string = "."
 
 // rootCmd represents the base command when called without any subcommands
 var generateCmd = &cobra.Command{
-  Use:   "gen",
-  Short: "generate",
-  Long: "Generate openshift cluster ",
+  Use:   "stage",
+  Short: "stage",
+  Long: "Generate openshift cluster assets",
   Run: func(cmd *cobra.Command, args []string) {
 
       if PConfigDir == "" { util.Fail("missing -d option")}
@@ -41,13 +41,13 @@ var generateCmd = &cobra.Command{
       util.Info("Nodes  : %d masters, %d workers",config.Masters,config.Workers)
 
 
-      gen:= new(defs.GeneratorConfig)
+      gen:= new(defs.GeneratorDefinition)
       gen.Meta=config
-      gen.Root=PConfigDir
-      gen.Images=util.CreateDir(PConfigDir,"images")
+      gen.RootDir=PConfigDir
+      gen.ImageDir=util.CreateDir(PConfigDir,"images")
       gen.Installer=util.CreateDir(PConfigDir,"installer")
-      gen.Secrets=util.CreateDir(PConfigDir,"secrets")
-      gen.Tools=util.CreateDir(PConfigDir,"tools")
+      gen.SecretsDir=util.CreateDir(PConfigDir,"secrets")
+      gen.ToolsDir=util.CreateDir(PConfigDir,"tools")
       gen.Installation=util.CreateDir(PConfigDir,"installation")
       gen.Pxe=util.CreateDir(gen.Installation,"pxe")
       gen.Gateway="172.30.1.5"
@@ -79,7 +79,7 @@ var generateCmd = &cobra.Command{
 
       util.SaveAsYaml ("cluster.yaml",gen)
 
-      generate.Generate(gen)
+      stage.Generate(gen)
 
   },
 }

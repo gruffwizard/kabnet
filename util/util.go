@@ -166,6 +166,20 @@ func MoveFile(from string, to string) {
 	}
 }
 
+func RecreateDir(path string,dirname string) string {
+
+  dir := path+"/"+dirname
+
+  err := os.RemoveAll(dir)
+
+  if err!=nil {
+    log.Fatal(err)
+  }
+
+  return CreateDir(path,dirname)
+
+}
+
 func CreateDir(path string,dirname string) string {
   dir := path+"/"+dirname
 

@@ -1,4 +1,4 @@
-package generate
+package stage
 
 import (
   "github.com/gruffwizard/kabnet/defs"
@@ -43,12 +43,14 @@ subnet {{.Cluster.SubnetIP}} netmask 255.255.255.0 {
 host {{.Cluster.Kabnet.Name}} {
   hardware ethernet {{.Cluster.Kabnet.Mac}};
   fixed-address {{.Cluster.Kabnet.IP}};
+  option host-name {{.Cluster.Kabnet.Name}};
 }
 
 host {{.Cluster.BootStrap.Name}} {
   hardware ethernet    {{.Cluster.BootStrap.Mac}};
   option bootfile-name "{{.Cluster.BootStrap.Name}}.pxe";
   fixed-address        {{.Cluster.BootStrap.IP}};
+  option host-name     "{{.Cluster.BootStrap.Name}}";
 }
 
 {{range .Cluster.Masters}}
@@ -56,12 +58,14 @@ host {{.Name}} {
   hardware ethernet {{.Mac}};
   fixed-address {{.IP}};
   option bootfile-name "{{.Name}}.pxe";
+  option host-name "{{.Name}}.{{$.Cluster.Cluster}}";
 }{{end}}
 {{range .Cluster.Workers}}
 host {{.Name}} {
   hardware ethernet {{.Mac}};
   fixed-address {{.IP}};
   option bootfile-name "{{.Name}}.pxe";
+  option host-name "{{.Name}}.{{$.Cluster.Cluster}}";
 }{{end}}
 
 `

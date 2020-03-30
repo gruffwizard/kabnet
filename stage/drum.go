@@ -1,4 +1,4 @@
-package generate
+package stage
 
 
 import (
@@ -43,9 +43,10 @@ dig _etcd-client-ssl._tcp.{{.Cluster.Cluster}}.{{.Cluster.Domain}} SRV +short
 
 `
 
-func kabnetSetup(g *defs.GeneratorConfig) {
+func kabnetSetup(g *defs.GeneratorDefinition) {
 
-  g.Installation=util.CreateDir(g.Root,"installation")
+
+  g.Installation=util.RecreateDir(g.RootDir,"installation")
   // write all the data files..
 
   util.Info("Creating Vagrant file for installer")

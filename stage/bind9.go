@@ -1,4 +1,4 @@
-package generate
+package stage
 
 import (
   "github.com/gruffwizard/kabnet/defs"
@@ -25,7 +25,7 @@ func init() {
     ce.AddCallback(callback9)
 }
 
-func callback9(ce *defs.ConfigElement,g *defs.GeneratorConfig) {
+func callback9(ce *defs.ConfigElement,g *defs.GeneratorDefinition) {
 
       t:=buildBindDBTemplate(g)
       ce.AddFile("bind.db","/etc/bind/db.{{.Cluster.Domain}}",t)

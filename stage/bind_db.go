@@ -1,4 +1,4 @@
-package generate
+package stage
 
 import (
   "fmt"
@@ -35,7 +35,7 @@ func genRevMachines(machines []*defs.Machine ,cluster string) string {
   return results
 }
 
-func genForwardRecords(g *defs.GeneratorConfig) string {
+func genForwardRecords(g *defs.GeneratorDefinition) string {
 
   // add real machines
   r:="; Forward references\n"
@@ -58,7 +58,7 @@ func genForwardRecords(g *defs.GeneratorConfig) string {
   return r
 }
 
-func genReverseRecords(g *defs.GeneratorConfig) string {
+func genReverseRecords(g *defs.GeneratorDefinition) string {
 
   // add real machines
   r:="; Reverse references\n"
@@ -81,7 +81,7 @@ func genReverseRecords(g *defs.GeneratorConfig) string {
   return r
 }
 
-func genEtcdRecords(g *defs.GeneratorConfig) string {
+func genEtcdRecords(g *defs.GeneratorDefinition) string {
   r:="; ETCD entries\n"
   masters:=g.Cluster.Masters
   for w := 0; w < len(masters); w++ {
@@ -99,7 +99,7 @@ r+=fmt.Sprintf("_etcd-client-ssl._tcp.%s 86400 IN SRV 0 10 2379 etcd-%d.%s.%s.\n
 return r
 }
 
-func buildBindDBTemplate(g *defs.GeneratorConfig) string {
+func buildBindDBTemplate(g *defs.GeneratorDefinition) string {
 
   text:=named_zone_header
 

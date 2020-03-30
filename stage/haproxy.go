@@ -1,4 +1,4 @@
-package generate
+package stage
 
 import (
   "github.com/gruffwizard/kabnet/defs"

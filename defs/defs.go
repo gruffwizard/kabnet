@@ -4,66 +4,35 @@ import (
   "strconv"
   "strings"
   "github.com/google/uuid"
-  "log"
-  "fmt"
+
 )
 var sshPortRef int = 1200
 
-// VersionInfo Top Level element describing available OpenShift versions
-type VersionInfo struct {
-    Versions []*Version
-    Tools []string
-}
 
-
-func (vi *VersionInfo) String() string {
-
-  var list string
-  for _,v := range vi.Versions {
-    list=list+" "+v.Name
-  }
-	return list
-
-}
-
-func (vi *VersionInfo) GetVersion(vid string) *Version {
-
-  if vid=="latest" {
-    return vi.Versions[len(vi.Versions)-1]
-  }
-
-  for _,v := range vi.Versions {
-    if v.Name==vid { return v}
-  }
-  return nil
-}
-
-
-func (v *VersionInfo) GetTools(tid string) string {
-
-
-  if len(v.Tools)<1 {
-    log.Fatalf("Tools list for %s is empty",tid)
-  }
-  if (tid=="latest" || tid=="") { return v.Tools[len(v.Tools)-1] }
-
-  for _,t := range v.Tools {
-    if t==tid { return t}
-  }
-  return ""
-}
-
-type Version struct {
-    Name string
-    SubVersions []string
+type Dependencies struct {
+    BaseURL string
+    Initramfs string
+    Kernel string
+    Metal  string
 
 }
 
 
-func (v *Version) String() string {
+func (d *Dependencies) FileNames() []string {
 
-  return fmt.Sprintf("%s (%d svs)",v.Name,len(v.SubVersions))
+  return []string{ d.Initramfs,d.Kernel,d.Metal}
+}
 
+type OpenshiftTools struct {
+    BaseURL string
+    Client string
+    Installer string
+
+}
+
+func (d *OpenshiftTools) FileNames() []string {
+
+  return []string{ d.Client,d.Installer}
 }
 
 
@@ -84,8 +53,8 @@ type Options struct {
 }
 
 type Config struct {
-  Version string `yaml:"version"`
-  Tools string   `yaml:"tools"`
+  OpenshiftVersion string `yaml:"openshift"`
+  ToolsVersion string   `yaml:"tools"`
   Domain  string `yaml:"domain"`
   Cluster string `yaml:"cluster"`
 
@@ -93,18 +62,18 @@ type Config struct {
   Masters int    `yaml:"masters"`
   Workers int    `yaml:"workers"`
 
-
-
+  ImageInfo Dependencies `yaml:"deps,omitempty"`
+  OpenshiftTools OpenshiftTools `yaml:"ostools,omitempty"`
 
 }
 
-type GeneratorConfig struct {
+type GeneratorDefinition struct {
 
-  Root string `yaml:"root"`
-  Images string `yaml:"images"`
+  RootDir string `yaml:"root"`
+  ImageDir string `yaml:"images"`
   Installer string `yaml:"installer"`
-  Secrets string `yaml:"secrets"`
-  Tools string `yaml:"tools"`
+  SecretsDir string `yaml:"secrets"`
+  ToolsDir string `yaml:"tools"`
   Installation string `yaml:"installation"`
   Pxe string `yaml:"pxe"`
   Cluster ClusterConfig `yaml:"cluster"`
@@ -113,6 +82,7 @@ type GeneratorConfig struct {
   Meta  *Config `yaml:"meta,omitempty"`
   Gateway string `yaml:"gateway"`
   Options  Options `yaml:"options,omitempty"`
+
 }
 
 type Machine struct {

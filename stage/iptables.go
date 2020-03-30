@@ -1,4 +1,4 @@
-package generate
+package stage
 
 
 import (
@@ -15,7 +15,7 @@ func init() {
 
 }
 
-func callbackIPTables(ce *defs.ConfigElement,g *defs.GeneratorConfig) {
+func callbackIPTables(ce *defs.ConfigElement,g *defs.GeneratorDefinition) {
 
     ce.AddConfigCmd("echo 1 > /proc/sys/net/ipv4/ip_forward")
 

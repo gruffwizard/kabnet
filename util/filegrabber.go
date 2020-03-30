@@ -6,6 +6,7 @@ import (
 	 "net/http"
 	 "log"
 	 "io/ioutil"
+	 "fmt"
 	"github.com/cavaliercoder/grab"
 )
 
@@ -35,7 +36,7 @@ func FetchFile(dir string, url string,file string) string {
 	req, _ := grab.NewRequest(dir, url+"/"+file)
 
 	// start download
-	Info("Downloading %v...\n", req.URL())
+	Info("Downloading %v: ", req.URL())
 	resp := client.Do(req)
 
 	// start UI loop
@@ -46,7 +47,8 @@ Loop:
 	for {
 		select {
 		case <-t.C:
-			Info("  transferred %v / %v bytes (%.2f%%)\n",
+
+			fmt.Printf("\u001b[1000D transferred %v / %v bytes (%.2f%%)",
 				resp.BytesComplete(),
 				resp.Size(),
 				100*resp.Progress())
@@ -62,7 +64,7 @@ Loop:
     Fail("Download failed: %v\n", err)
 	}
 
-Info("Download saved to %v \n", resp.Filename)
+Info("\nDownload saved to %v \n", resp.Filename)
 
 return fname
 

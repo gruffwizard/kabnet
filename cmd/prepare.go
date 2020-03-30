@@ -3,7 +3,7 @@ package cmd
 import (
 
   "github.com/spf13/cobra"
-  "github.com/gruffwizard/kabnet/prep"
+  "github.com/gruffwizard/kabnet/prepare"
   "github.com/gruffwizard/kabnet/util"
   "github.com/gruffwizard/kabnet/defs"
   "path/filepath"
@@ -40,8 +40,8 @@ var prepCmd = &cobra.Command{
 func init() {
         rootCmd.AddCommand(prepCmd)
         prepCmd.Flags().StringVarP(&PDirectory,              "dir", "d", "", "output directory (required)")
-        prepCmd.Flags().StringVarP(&cmdLineParams.Version,       "version",  "v", "", "OpenShift version (defaults to latest)")
-        prepCmd.Flags().StringVarP(&cmdLineParams.Tools,  "tools",    "t", "", "OpenShift tools version (defaults to latest within version)")
+        prepCmd.Flags().StringVarP(&cmdLineParams.OpenshiftVersion,       "version",  "v", "", "OpenShift version (defaults to latest)")
+        prepCmd.Flags().StringVarP(&cmdLineParams.ToolsVersion,  "tools",    "t", "", "OpenShift tools version (defaults to latest within version)")
         prepCmd.Flags().StringVarP(&cmdLineParams.Domain,     "domain",   "m", "", "OpenShift Domain (defaults to kabnet.kab)")
           prepCmd.Flags().StringVarP(&cmdLineParams.Cluster,     "cluster",   "c", "", "OpenShift Cluster (defaults to dev)")
 }

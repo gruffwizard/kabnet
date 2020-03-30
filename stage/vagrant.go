@@ -1,4 +1,4 @@
-package generate
+package stage
 
 
 import (
@@ -19,7 +19,7 @@ Vagrant.configure("2") do |config|
 
 config.ssh.insert_key = true
 config.ssh.forward_agent = true
-config.ssh.private_key_path = "{{.Secrets}}/core_rsa"
+config.ssh.private_key_path = "{{.SecretsDir}}/core_rsa"
 config.ssh.username = "core"
 
 
@@ -46,8 +46,8 @@ config.ssh.username = "core"
     installer.vm.network :private_network, ip: '{{.Gateway}}'
     installer.vm.network :private_network, ip: "{{.Cluster.Kabnet.IP}}" , :name => 'vboxnet0', virtualbox__intnet: "kabnetnet"
     installer.vm.synced_folder "{{.Installation}}", "/installation"
-    installer.vm.synced_folder "{{.Installer}}", "/installer"
-    installer.vm.synced_folder "{{.Images}}", "/images"
+    installer.vm.synced_folder "{{.Installer}}/{{.Meta.ToolsVersion}}", "/installer"
+    installer.vm.synced_folder "{{.ImageDir}}", "/images"
   # installer.vm.synced_folder "{{.Pxe}}", "/var/tftpboot"
     installer.vm.provision "shell", path: "kabnet.sh"
     installer.vm.provision "shell", path: "kabnet-check.sh"
@@ -71,7 +71,7 @@ config.ssh.username = "core"
           v.customize ["modifyvm", :id, "--nattftpserver1", "{{.Cluster.Kabnet.IP}}"]
           v.customize ["modifyvm", :id, "--nattftpfile1"  , "{{.Cluster.BootStrap.Name}}.pxe"]
           v.customize ["storageattach",:id,"--storagectl", "IDE",
-                       "--port","1","--device","0","--type","dvddrive","--medium","{{.Images}}/ipxe.iso"]
+                       "--port","1","--device","0","--type","dvddrive","--medium","{{.ImageDir}}/ipxe.iso"]
           v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
           v.customize ["modifyvm", :id, "--usb", "off"]
 
@@ -96,7 +96,7 @@ config.ssh.username = "core"
         v.customize ["modifyvm", :id, "--nattftpserver1", "{{$.Cluster.Kabnet.IP}}"]
         v.customize ["modifyvm", :id, "--nattftpfile1"  , "{{.Name}}.pxe"]
         v.customize ["storageattach",:id,"--storagectl", "IDE",
-        "--port","1","--device","0","--type","dvddrive","--medium","{{$.Images}}/ipxe.iso"]
+        "--port","1","--device","0","--type","dvddrive","--medium","{{$.ImageDir}}/ipxe.iso"]
         v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
         v.customize ["modifyvm", :id, "--usb", "off"]
 
@@ -118,7 +118,7 @@ config.ssh.username = "core"
        v.customize ["modifyvm", :id, "--nattftpserver1", "{{$.Cluster.Kabnet.IP}}"]
        v.customize ["modifyvm", :id, "--nattftpfile1"  , "{{.Name}}.pxe"]
        v.customize ["storageattach",:id,"--storagectl", "IDE",
-       "--port","1","--device","0","--type","dvddrive","--medium","{{$.Images}}/ipxe.iso"]
+       "--port","1","--device","0","--type","dvddrive","--medium","{{$.ImageDir}}/ipxe.iso"]
        v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
        v.customize ["modifyvm", :id, "--usb", "off"]
 

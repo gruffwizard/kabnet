@@ -1,4 +1,4 @@
-package generate
+package stage
 
 
 
@@ -20,6 +20,8 @@ func init() {
     ce.AddConfigCmd("/installer/openshift-install create ignition-configs --dir=/installation")
     ce.AddConfigCmd("chmod -R a+rw /installation")
 }
+
+var check_script=`openshift-install --dir=/installation wait-for bootstrap-complete --log-level=debug`
 
 var template1=
 `apiVersion: v1

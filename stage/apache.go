@@ -1,4 +1,4 @@
-package generate
+package stage
 
 
 import (
@@ -13,10 +13,10 @@ func init() {
 
     ce.AddFile("ports.conf","/etc/apache2/ports.conf",ports)
     ce.AddConfigCmd("sed -i 's/VirtualHost *:80/VirtualHost *:8080/g' /etc/apache2/sites-enabled/000-default.conf")
-    ce.AddConfigCmd("ln -s /installation     /var/www/html/installation")
-    ce.AddConfigCmd("chmod a+rw                /var/www/html/installation")
-    ce.AddConfigCmd("ln -s /images           /var/www/html/images")
-    ce.AddConfigCmd("chmod a+rw                /var/www/html/images")
+    ce.AddConfigCmd("ln -s /installation /var/www/html/installation")
+    ce.AddConfigCmd("chmod a+rw          /var/www/html/installation")
+    ce.AddConfigCmd("ln -s /images       /var/www/html/images")
+    ce.AddConfigCmd("chmod a+rw          /var/www/html/images")
 
     ce.AddStartCmd("service apache2 restart")
 

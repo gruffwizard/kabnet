@@ -9,34 +9,6 @@ import (
 
 )
 
-
-
-
-// need to do vagrant box update
-
-var serverRoot string = "https://mirror.openshift.com/pub/openshift-v4/"
-
-var clientPath  string = "clients/ocp/"
-var depPath    string = "dependencies/rhcos/latest/latest/"
-
-
-//var client     string = "openshift-client-linux-4.3.3.tar.gz"
-//var installer  string = "openshift-install-linux-4.3.3.tar.gz"
-
-var initram string = "rhcos-4.3.0-x86_64-installer-initramfs.img"
-var kernel  string = "rhcos-4.3.0-x86_64-installer-kernel"
-var metal   string = "rhcos-4.3.0-x86_64-metal.raw.gz"
-
-
-// /clients/ocp/latest/openshift-client-linux-4.3.1.tar.gz
-// https://mirror.openshift.com/pub/openshift-v4/clients/ocp/latest/openshift-install-linux-4.3.1.tar.gz
-
-// https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.3.0-x86_64-installer-initramfs.img
-// https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.3.0-x86_64-installer-kernel
-// https://mirror.openshift.com/pub/openshift-v4/dependencies/rhcos/latest/latest/rhcos-4.3.0-x86_64-metal.raw.gz
-
-// assumes target dir already exists..
-
 func Prepare(path string,cmdcfg defs.Config) {
 
 
@@ -47,8 +19,8 @@ func Prepare(path string,cmdcfg defs.Config) {
   util.Section("OpenShift Cluster Configuration")
   util.Info("Domain Name         : %s ",config.Domain)
   util.Info("Cluster Name        : %s ",config.Cluster)
-  util.Info("Openshift Version   : %s ",config.Version)
-  util.Info("Openshift Installer : %s ",config.Tools)
+  util.Info("Openshift Version   : %s ",config.OpenshiftVersion)
+  util.Info("Openshift Installer : %s ",config.ToolsVersion)
 
   checkForUserInstallableTools(path)
 

@@ -5,61 +5,73 @@ import (
   "github.com/spf13/cobra"
   "github.com/gruffwizard/kabnet/openshift"
   "fmt"
+  "strings"
 
 )
+
+
 //FindAllStringSubmatch
 var infoCmd = &cobra.Command{
   Use:   "info",
   Short: "info",
-  Long: "List information about available OpenShift versions",
+  Long: "List information about available OpenShift versions and tools",
 }
 
-var infoLatestCmd = &cobra.Command{
-  Use:   "latest",
-  Short: "latest",
-  Long: "List information about latest OpenShift versions",
+var infoDepsCmd = &cobra.Command{
+  Use:   "deps",
+  Short: "deps",
+  Long: "List information about Openshift Dependencies",
 
   Run: func(cmd *cobra.Command, args []string) {
 
-      versions:=openshift.OpenShiftVersions()
-      latest:=versions.GetVersion("latest")
-      tlatest:=versions.GetTools("latest")
-      fmt.Printf("\nLatest Online Version with tools : [%s] , [%s]\n",latest,tlatest)
+      if len(args)==0 {
+        fmt.Println(strings.Join(openshift.OpenShiftMajorVersions(),", "))
+      } else {
+        subversions:=openshift.OpenShiftMinorVersion(args[0])
+        if len(subversions)>0 {
+          fmt.Println(strings.Join(subversions,", "))
+        } else {
+          files:=openshift.Dependencies(args[0])
+          if files==nil {
+              fmt.Println("no information for version ",args[0])
+          } else {
+          fmt.Println("base url :",files.BaseURL)
+          fmt.Println("Initramfs:",files.Initramfs)
+          fmt.Println("Kernel   :",files.Kernel)
+          fmt.Println("Metal    :",files.Metal)
+        }
+        }
 
-
+      }
   },
 }
 
-var infoAllCmd = &cobra.Command{
-  Use:   "all",
-  Short: "all",
-  Long: "List all information about available OpenShift versions",
+var infoClientsCmd = &cobra.Command{
+  Use:   "clients",
+  Short: "clients",
+  Long: "List information about available OpenShift client tools",
 
   Run: func(cmd *cobra.Command, args []string) {
 
-    versions:=openshift.OpenShiftVersions()
-
-    fmt.Printf("\nOnline Versions:")
-
-    for _, v := range versions.Versions {
-      fmt.Printf("\n  [%s]",v.Name)
-      fmt.Printf("\n      Subversions : ")
-      for _,t := range v.SubVersions {
-        fmt.Printf("[%s] ",t)
+      if len(args)==0 {
+        fmt.Println(strings.Join(openshift.ClientVersions(),", "))
+      } else {
+        files:=openshift.Clients(args[0])
+        fmt.Println("base url :",files.BaseURL)
+        fmt.Println("Installer:",files.Installer)
+        fmt.Println("Client   :",files.Client)
+      
       }
 
-    }
-    fmt.Printf("\n")
-    fmt.Printf("\n      Tools       : ")
-    for _,t := range versions.Tools {
-      fmt.Printf("[%s] ",t)
-    }
+
   },
 }
 
 func init() {
         rootCmd.AddCommand(infoCmd)
-        infoCmd.AddCommand(infoAllCmd)
-        infoCmd.AddCommand(infoLatestCmd)
+        infoCmd.AddCommand(infoClientsCmd)
+        infoCmd.AddCommand(infoDepsCmd)
+
+
 
 }

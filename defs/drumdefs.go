@@ -44,14 +44,14 @@ func (d *ConfigElement) StartCommands() []string {
 }
 
 
-func (d *ConfigElement) AddCallback(f func(*ConfigElement,*GeneratorConfig) )  {
+func (d *ConfigElement) AddCallback(f func(*ConfigElement,*GeneratorDefinition) )  {
 
   d.callback=f
 
 }
 
 
-func (d *KabnetConfig) Callback(g *GeneratorConfig) {
+func (d *KabnetConfig) Callback(g *GeneratorDefinition) {
 
       for _, v := range d.config {
           if v.callback!=nil    { v.callback(v,g) }
@@ -76,7 +76,7 @@ var Kabnet *KabnetConfig = new(KabnetConfig)
 
 type ConfigElement struct {
   unit string
-  callback func(*ConfigElement,*GeneratorConfig)
+  callback func(*ConfigElement,*GeneratorDefinition)
   package_list []string
   files_list   []*InstallFile
   config_list  []string
