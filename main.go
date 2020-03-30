@@ -1,14 +1,9 @@
-
 package main
 
 import (
-
-  "github.com/gruffwizard/kabnet/cmd"
-
+	"github.com/gruffwizard/kabnet/cmd"
 )
 
-
-
 func main() {
-  cmd.Execute()
+	cmd.Execute()
 }

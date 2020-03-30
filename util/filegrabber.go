@@ -50,7 +50,7 @@ Loop:
 
 			fmt.Printf("\u001b[1000D transferred %v / %v bytes (%.2f%%)",
 				resp.BytesComplete(),
-				resp.Size(),
+				resp.Size,
 				100*resp.Progress())
 
 		case <-resp.Done:
