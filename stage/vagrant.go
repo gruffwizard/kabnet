@@ -36,10 +36,9 @@ config.ssh.username = "core"
     end
 
     installer.vm.network "forwarded_port", guest: {{.Cluster.BootStrap.SSHProxyPort}}, host: {{.Cluster.BootStrap.SSHProxyPort}}
-    {{range .Cluster.Masters}}
-    installer.vm.network "forwarded_port", guest: {{.SSHProxyPort}}, host: {{.SSHProxyPort}}
+    {{range .Cluster.Masters}}installer.vm.network "forwarded_port", guest: {{.SSHProxyPort}}, host: {{.SSHProxyPort}}
     {{end}}
-    {{range .Cluster.Workers}}
+    {{range .Cluster.Workers}}installer.vm.network "forwarded_port", guest: {{.SSHProxyPort}}, host: {{.SSHProxyPort}}
     {{end}}
 
     installer.vm.box = "ubuntu/xenial64"
@@ -75,11 +74,16 @@ config.ssh.username = "core"
           v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
           v.customize ["modifyvm", :id, "--usb", "off"]
 
-          v.memory = 8192
-          v.cpus = 2
+          v.memory = 4096
+          v.cpus = 1
 
       end
 
+      client.ssh.username = "core"
+      client.ssh.insert_key = false
+      client.ssh.host = "{{.Gateway}}"
+      client.ssh.port = {{.Cluster.BootStrap.SSHProxyPort}}
+      client.ssh.timeout = 1
       client.vm.hostname = "{{.Cluster.BootStrap.Name}}"
     end
 
@@ -100,9 +104,15 @@ config.ssh.username = "core"
         v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
         v.customize ["modifyvm", :id, "--usb", "off"]
 
-        v.memory = 8192
-        v.cpus = 2
+        v.memory = 4096
+        v.cpus = 1
       end
+
+      m.ssh.username = "core"
+      m.ssh.insert_key = false
+      m.ssh.host = "{{$.Gateway}}"
+      m.ssh.port = {{.SSHProxyPort}}
+      m.ssh.timeout = 1
 
       m.vm.hostname = "{{.Name}}.{{$.Cluster.Cluster}}"
     end
@@ -123,8 +133,14 @@ config.ssh.username = "core"
        v.customize ["modifyvm", :id, "--usb", "off"]
 
        v.memory = 4096
-       v.cpus = 2
+       v.cpus = 1
      end
+
+     m.ssh.username = "core"
+     m.ssh.insert_key = false
+     m.ssh.host = "{{$.Gateway}}"
+     m.ssh.port = {{.SSHProxyPort}}
+     m.ssh.timeout = 1
 
      m.vm.hostname = "{{.Name}}.{{$.Cluster.Cluster}}"
 

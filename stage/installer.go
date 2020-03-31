@@ -21,7 +21,7 @@ func init() {
     ce.AddConfigCmd("chmod -R a+rw /installation")
 }
 
-var check_script=`openshift-install --dir=/installation wait-for bootstrap-complete --log-level=debug`
+//var check_script=`openshift-install gather bootstrap --help `
 
 var template1=
 `apiVersion: v1
