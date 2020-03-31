@@ -65,6 +65,8 @@ config.ssh.username = "core"
       client.vm.box = "osuosl/pxe"
       client.vm.network :private_network, ip: "{{.Cluster.BootStrap.IP}}" , :mac => "{{.Cluster.BootStrap.MacVB}}", virtualbox__intnet: "kabnetnet",:name => 'vboxnet0', :adapter => 1
 
+      client.vm.synced_folder ".", "/vagrant", disabled: true
+
       client.vm.provider "virtualbox" do |v|
         v.name = "bootstrap"
           v.customize ["modifyvm", :id, "--nattftpserver1", "{{.Cluster.Kabnet.IP}}"]
@@ -83,7 +85,6 @@ config.ssh.username = "core"
       client.ssh.insert_key = false
       client.ssh.host = "{{.Gateway}}"
       client.ssh.port = {{.Cluster.BootStrap.SSHProxyPort}}
-      client.ssh.timeout = 1
       client.vm.hostname = "{{.Cluster.BootStrap.Name}}"
     end
 
@@ -94,6 +95,8 @@ config.ssh.username = "core"
 
 
       m.vm.network :private_network, ip: "{{.IP}}" ,auto_config: false, :mac => "{{.MacVB}}", :name => 'vboxnet0', :adapter => 1, virtualbox__intnet: "kabnetnet"
+
+      m.vm.synced_folder ".", "/vagrant", disabled: true
 
       m.vm.provider "virtualbox" do |v|
         v.name = "{{.Name}}"
@@ -112,8 +115,7 @@ config.ssh.username = "core"
       m.ssh.insert_key = false
       m.ssh.host = "{{$.Gateway}}"
       m.ssh.port = {{.SSHProxyPort}}
-      m.ssh.timeout = 1
-
+      
       m.vm.hostname = "{{.Name}}.{{$.Cluster.Cluster}}"
     end
    {{end}}
@@ -122,7 +124,9 @@ config.ssh.username = "core"
    config.vm.define "{{.Name}}" do |m|
      m.vm.box = "osuosl/pxe"
      m.vm.network :private_network, ip: "{{.IP}}" ,auto_config: false, :mac => "{{.MacVB}}",  :adapter => 1, virtualbox__intnet: "kabnetnet"
+     m.vm.hostname = "{{.Name}}.{{$.Cluster.Cluster}}"
 
+     m.vm.synced_folder ".", "/vagrant", disabled: true
      m.vm.provider "virtualbox" do |v|
        v.name = "{{.Name}}"
        v.customize ["modifyvm", :id, "--nattftpserver1", "{{$.Cluster.Kabnet.IP}}"]
@@ -140,9 +144,7 @@ config.ssh.username = "core"
      m.ssh.insert_key = false
      m.ssh.host = "{{$.Gateway}}"
      m.ssh.port = {{.SSHProxyPort}}
-     m.ssh.timeout = 1
 
-     m.vm.hostname = "{{.Name}}.{{$.Cluster.Cluster}}"
 
    end
   {{end}}
