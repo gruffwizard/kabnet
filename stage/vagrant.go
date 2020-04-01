@@ -30,7 +30,6 @@ config.ssh.username = "core"
 
     installer.vm.provider "virtualbox" do |v|
       v.name = "kabnet"
-      #v.customize ["natnetwork","add","--netname","kabnetnet","--network","192.168.50.0/24","--enable"]
       v.customize ["natnetwork","modify","--netname","kabnetnet","--dhcp","off"]
       v.customize ["modifyvm", :id, "--usb", "off"]
     end
@@ -47,7 +46,6 @@ config.ssh.username = "core"
     installer.vm.synced_folder "{{.Installation}}", "/installation"
     installer.vm.synced_folder "{{.Installer}}/{{.Meta.ToolsVersion}}", "/installer"
     installer.vm.synced_folder "{{.ImageDir}}", "/images"
-  # installer.vm.synced_folder "{{.Pxe}}", "/var/tftpboot"
     installer.vm.provision "shell", path: "kabnet.sh"
     installer.vm.provision "shell", path: "kabnet-check.sh"
 
@@ -65,7 +63,6 @@ config.ssh.username = "core"
       client.vm.box = "osuosl/pxe"
       client.vm.network :private_network, ip: "{{.Cluster.BootStrap.IP}}" , :mac => "{{.Cluster.BootStrap.MacVB}}", virtualbox__intnet: "kabnetnet",:name => 'vboxnet0', :adapter => 1
 
-      client.vm.communicator = "none"
 
       client.vm.provider "virtualbox" do |v|
         v.name = "bootstrap"
@@ -76,8 +73,8 @@ config.ssh.username = "core"
           v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
           v.customize ["modifyvm", :id, "--usb", "off"]
 
-          v.memory = 4096
-          v.cpus = 1
+          v.memory = 8192
+
 
       end
 
@@ -96,7 +93,7 @@ config.ssh.username = "core"
 
       m.vm.network :private_network, ip: "{{.IP}}" ,auto_config: false, :mac => "{{.MacVB}}", :name => 'vboxnet0', :adapter => 1, virtualbox__intnet: "kabnetnet"
 
-      m.vm.communicator = "none"
+
 
       m.vm.provider "virtualbox" do |v|
         v.name = "{{.Name}}"
@@ -107,8 +104,8 @@ config.ssh.username = "core"
         v.customize ["modifyvm",:id,"--boot1","disk","--boot2","dvd","--boot3","floppy","--boot4","net"]
         v.customize ["modifyvm", :id, "--usb", "off"]
 
-        v.memory = 4096
-        v.cpus = 1
+        v.memory = 8192
+
       end
 
       m.ssh.username = "core"
@@ -125,7 +122,7 @@ config.ssh.username = "core"
      m.vm.box = "osuosl/pxe"
      m.vm.network :private_network, ip: "{{.IP}}" ,auto_config: false, :mac => "{{.MacVB}}",  :adapter => 1, virtualbox__intnet: "kabnetnet"
      m.vm.hostname = "{{.Name}}.{{$.Cluster.Cluster}}"
-     m.vm.communicator = "none"
+
 
      m.vm.synced_folder ".", "/vagrant", disabled: true
      m.vm.provider "virtualbox" do |v|
@@ -138,7 +135,7 @@ config.ssh.username = "core"
        v.customize ["modifyvm", :id, "--usb", "off"]
 
        v.memory = 4096
-       v.cpus = 1
+
      end
 
      m.ssh.username = "core"
@@ -151,14 +148,5 @@ config.ssh.username = "core"
   {{end}}
 
 
-
-  config.vm.define "monitor" do |installer|
-    installer.vm.box = "ubuntu/xenial64"
-    installer.vm.network :private_network, ip: "192.168.50.199" , :adapter => 1 , virtualbox__intnet: "kabnetnet"
-    installer.vm.hostname = "monitor"
-    installer.vm.provider "virtualbox" do |v|
-      v.name = "monitor"
-    end
-  end
 end
 `
