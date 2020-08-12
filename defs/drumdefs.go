@@ -4,11 +4,13 @@ import (
   "strings"
 )
 type KabnetConfig struct {
-    config  []*ConfigElement
+  config  []*ConfigElement  
 }
 
 func (d *KabnetConfig) Elements() []*ConfigElement {
+
   return d.config
+
 }
 
 func (d *KabnetConfig) PackageNames() []string {

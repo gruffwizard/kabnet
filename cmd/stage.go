@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"github.com/gruffwizard/kabnet/defs"
-	"github.com/gruffwizard/kabnet/stage"
+	"github.com/gruffwizard/kabnet/generate"
 	"github.com/gruffwizard/kabnet/util"
 	"github.com/spf13/cobra"
 	"log"
@@ -82,7 +82,7 @@ var generateCmd = &cobra.Command{
 
 		util.SaveAsYaml("cluster.yaml", gen)
 
-		stage.Generate(gen)
+		generate.Generate(gen)
 
 	},
 }
