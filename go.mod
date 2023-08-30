@@ -9,5 +9,5 @@ require (
 	github.com/google/uuid v1.1.1
 	github.com/spf13/cobra v0.0.7
 	github.com/walle/targz v0.0.0-20140417120357-57fe4206da5a
-	gopkg.in/yaml.v3 v3.0.0-20200313102051-9f266ea9e77c
+	gopkg.in/yaml.v3 v3.0.0
 )
